@@ -22,6 +22,6 @@ public class WebViewPresenter implements IWebViewPresenter {
         webSettings.setDomStorageEnabled(true);
 //        DWebView.setWebContentsDebuggingEnabled(true); // 启用WebView调试模式
         webView.addJavascriptObject(new JSApi(), null);
-        webView.loadUrl("http://localhost:5000/");
+        webView.loadUrl("file:///android_asset/web/index.html");
     }
 }

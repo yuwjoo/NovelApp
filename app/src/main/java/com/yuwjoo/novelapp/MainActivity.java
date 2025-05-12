@@ -8,13 +8,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.yuwjoo.novelapp.dsbridge.JSApi;
+import com.yuwjoo.novelapp.presenter.BackPressedPresenter;
+import com.yuwjoo.novelapp.presenter.CheckUpdatePresenter;
 import com.yuwjoo.novelapp.presenter.WebViewPresenter;
 
 import wendu.dsbridge.DWebView;
 
 public class MainActivity extends AppCompatActivity {
-    private DWebView dwebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +27,10 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        initView();
+        DWebView dwebView = findViewById(R.id.webView);
 
+        new CheckUpdatePresenter(); // 检查更新功能
+        new BackPressedPresenter(this, dwebView); // 返回键功能
         new WebViewPresenter(dwebView); // WebView功能
     }
-
-    private void initView() {
-        dwebView = findViewById(R.id.webView);
-    }
-
 }

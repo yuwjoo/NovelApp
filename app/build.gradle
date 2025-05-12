@@ -26,9 +26,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src\\main\\assets'
+            }
+        }
+    }
 }
 
 dependencies {
+    implementation libs.gson
     implementation libs.dsbridge.android
     implementation libs.okhttp
     implementation libs.appcompat
