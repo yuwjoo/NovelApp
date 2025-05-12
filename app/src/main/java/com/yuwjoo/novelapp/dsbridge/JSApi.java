@@ -108,16 +108,9 @@ public class JSApi {
         }
     }
 
-    //同步API
     @JavascriptInterface
-    public String testSyn(Object msg) {
+    public String dsinit(Object msg) {
         Log.i(TAG, "testSyn:" + msg);
         return msg + "［syn call］";
-    }
-
-    //异步API
-    @JavascriptInterface
-    public void testAsync(Object msg, CompletionHandler<String> handler) {
-        handler.complete(msg + " [ async call]");
     }
 }

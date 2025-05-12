@@ -23,5 +23,6 @@ public class WebViewPresenter implements IWebViewPresenter {
 //        DWebView.setWebContentsDebuggingEnabled(true); // 启用WebView调试模式
         webView.addJavascriptObject(new JSApi(), null);
         webView.loadUrl("file:///android_asset/web/index.html");
+//        webView.loadUrl("http://192.168.0.108:8080");
     }
 }

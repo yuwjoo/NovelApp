@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunknovel_web"]=self["webpackChunknovel_web"]||[]).push([[942],{6942:function(e,n,a){a.r(n),a.d(n,{default:function(){return o}});var r=a(6768);const s={class:"book-search"};var u=(0,r.pM)({name:"bookSearch",__name:"index",setup(e){return(e,n)=>((0,r.uX)(),(0,r.CE)("div",s,"搜索页面"))}});const c=u;var o=c}}]);
-//# sourceMappingURL=942.315a86cb.js.map

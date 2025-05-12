@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         DWebView dwebView = findViewById(R.id.webView);
 
-        new CheckUpdatePresenter(); // 检查更新功能
+//        new CheckUpdatePresenter(); // 检查更新功能
         new BackPressedPresenter(this, dwebView); // 返回键功能
         new WebViewPresenter(dwebView); // WebView功能
     }
