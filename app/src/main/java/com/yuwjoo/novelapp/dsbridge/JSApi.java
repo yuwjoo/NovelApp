@@ -1,7 +1,6 @@
 package com.yuwjoo.novelapp.dsbridge;
 
 import android.util.Base64;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import androidx.annotation.NonNull;
@@ -26,30 +25,24 @@ import okhttp3.Response;
 import wendu.dsbridge.CompletionHandler;
 
 public class JSApi {
-    private final String TAG = "JSApi";
 
     @JavascriptInterface
-    public void onAjaxRequest(Object requestData, CompletionHandler<Object> handler) throws JSONException {
-        Log.i(TAG, "onAjaxRequest:");
-        JSONObject requestJSON = new JSONObject(requestData.toString());
-        //定义响应结构
-        final Map<String, Object> responseData = new HashMap<>();
-        responseData.put("statusCode", 0);
+    public void onAjaxRequest(@NonNull Object requestData, CompletionHandler<Object> handler) throws JSONException {
+        final JSONObject requestJSON = (JSONObject) requestData; // 请求json数据
+        final Map<String, Object> responseData = new HashMap<>(); // 响应数据
 
         try {
-            //判断是否需要将返回结果编码，responseType为stream时应编码
-            String contentType = "";
-            boolean encode = false;
-            String responseType = requestJSON.optString("responseType", "");
-            if (responseType.equals("stream")) {
-                encode = true;
-            }
+            String url = requestJSON.getString("url"); // 请求url
+            String method = requestJSON.getString("method"); // 请求method
+            JSONObject headers = requestJSON.getJSONObject("headers"); // 请求头数据
+            String bodyData = requestJSON.optString("body", ""); // 请求body数据
+            String responseType = requestJSON.optString("responseType", ""); // 需要响应的数据类型
+            String contentType = ""; // 数据类型
 
             Request.Builder rb = new Request.Builder();
-            rb.url(requestJSON.getString("url"));
-            JSONObject headers = requestJSON.getJSONObject("headers");
 
-            //设置请求头
+            rb.url(url); // 设置url
+
             Iterator<String> iterator = headers.keys();
             while (iterator.hasNext()) {
                 String key = iterator.next();
@@ -62,55 +55,59 @@ public class JSApi {
                 if (lKey.equals("content-type")) {
                     contentType = value;
                 }
-//                rb.header(key, value);
+                rb.header(key, value); //设置请求头
             }
 
-            //创建请求体
-            if (requestJSON.getString("method").equals("POST")) {
+            if (!bodyData.equals("null")) {
                 RequestBody requestBody = RequestBody
-                        .create(requestJSON.getString("data"), MediaType.parse(contentType));
-//                rb.post(requestBody);
+                        .create(bodyData, MediaType.parse(contentType));
+                if (method.equalsIgnoreCase("post")) {
+                    rb.post(requestBody); // 设置请求body
+                } else {
+                    rb.put(requestBody); // 设置请求body
+                }
             }
-            //创建并发送http请求
-            Call call = OkHttpUtils.getInstance().newCall(rb.build());
-            final boolean finalEncode = encode;
-            call.enqueue(new Callback() {
+
+            Callback callback = new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    responseData.put("statusCode", 0);
                     responseData.put("responseText", e.getMessage());
                     handler.complete(new JSONObject(responseData).toString());
                 }
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    Map<String, List<String>> responseHeaders = response.headers().toMultimap(); // 响应头
                     String data = null;
-                    //如果需要编码，则对结果进行base64编码后返回
-                    if (finalEncode) {
+
+                    if (responseType.equals("stream")) {
                         if (response.body() != null) {
-                            data = Base64.encodeToString(response.body().bytes(), Base64.DEFAULT);
+                            data = Base64.encodeToString(response.body().bytes(), Base64.DEFAULT); // 对响应结果进行base64编码
                         }
                     } else {
                         if (response.body() != null) {
-                            data = response.body().string();
+                            data = response.body().string(); // 获取响应结果字符串
                         }
                     }
-                    responseData.put("responseText", data);
                     responseData.put("statusCode", response.code());
                     responseData.put("statusMessage", response.message());
-                    Map<String, List<String>> responseHeaders = response.headers().toMultimap();
+                    responseData.put("responseText", data);
                     responseData.put("headers", responseHeaders);
                     handler.complete(new JSONObject(responseData).toString());
                 }
-            });
+            };
+
+            OkHttpUtils.getOkHttpClient().newCall(rb.build()).enqueue(callback); // 发送http请求
         } catch (Exception e) {
+            responseData.put("statusCode", 0);
             responseData.put("responseText", e.getMessage());
-            handler.complete(new JSONObject(responseData).toString());
+            handler.complete(responseData.toString());
         }
     }
 
     @JavascriptInterface
     public String dsinit(Object msg) {
-        Log.i(TAG, "testSyn:" + msg);
         return msg + "［syn call］";
     }
 }
