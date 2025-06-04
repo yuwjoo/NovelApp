@@ -1,9 +1,6 @@
 package com.yuwjoo.novelapp.okhttp;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
-
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
