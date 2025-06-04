@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.webkit.WebSettings;
 
 import com.yuwjoo.novelapp.dsbridge.JSApi;
+import com.yuwjoo.novelapp.utils.dsbridge.jsapi.BaseJSApi;
 
 import wendu.dsbridge.DWebView;
 
@@ -22,8 +23,9 @@ public class WebViewPresenter implements IWebViewPresenter {
         webSettings.setDomStorageEnabled(true);
         DWebView.setWebContentsDebuggingEnabled(true); // 启用WebView调试模式
         webView.addJavascriptObject(new JSApi(), null);
+        webView.addJavascriptObject(new BaseJSApi(), null);
 //        webView.loadUrl("file:///android_asset/web/index.html");
-//        webView.loadUrl("http://192.168.0.108:9000");
-        webView.loadUrl("http://localhost:5000"); // adb reverse tcp:5000 tcp:9000
+        webView.loadUrl("http://192.168.0.105:9000");
+//        webView.loadUrl("http://localhost:5000"); // adb reverse tcp:5000 tcp:9000
     }
 }

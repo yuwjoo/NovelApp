@@ -1,40 +1,54 @@
 package com.yuwjoo.novelapp.utils.dsbridge.jsapi;
 
-import android.util.Base64;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.yuwjoo.novelapp.module.Manifest;
-import com.yuwjoo.novelapp.okhttp.OkHttpUtils;
+import com.google.gson.JsonElement;
 import com.yuwjoo.novelapp.utils.dsbridge.module.RequestOptions;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import wendu.dsbridge.CompletionHandler;
 
-public class CommonJSApi {
+public class BaseJSApi {
 
     @JavascriptInterface
     public void request(@NonNull Object object, CompletionHandler<Object> handler) throws JSONException {
-        final RequestOptions requestOptions = new Gson().fromJson((JsonObject)object, RequestOptions.class); // 请求json数据
-//        final Map<String, Object> responseData = new HashMap<>(); // 响应数据
-//
+        final RequestOptions requestOptions = new Gson().fromJson(object.toString(), RequestOptions.class); // 请求json数据
+        final Map<String, Object> responseData = new HashMap<>(); // 响应数据
+
+        Request.Builder rb = new Request.Builder();
+        rb.url(requestOptions.getUrl()); // 设置url
+
+       Set<Map.Entry<String, JsonElement>> headerEntrySet = requestOptions.getHeaders().entrySet();
+
+//        headerEntrySet.
+
+        Log.i("aa", "aa");
+
+//        Iterator<String> iterator = requestOptions.getHeaders().;
+//        while (iterator.hasNext()) {
+//            String key = iterator.next();
+//            String value = headers.getString(key);
+//            String lKey = key.toLowerCase();
+//            if (lKey.equals("cookie")) {
+//                //使用CookieJar统一管理cookie
+//                continue;
+//            }
+//            if (lKey.equals("content-type")) {
+//                contentType = value;
+//            }
+//            rb.header(key, value); //设置请求头
+//        }
+
 //        try {
 //            String url = requestJSON.getString("url"); // 请求url
 //            String method = requestJSON.getString("method"); // 请求method
