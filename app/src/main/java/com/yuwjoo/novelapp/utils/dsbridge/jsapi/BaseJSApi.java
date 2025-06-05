@@ -15,20 +15,41 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import okhttp3.MediaType;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import wendu.dsbridge.CompletionHandler;
 
 public class BaseJSApi {
 
     @JavascriptInterface
     public void request(@NonNull Object object, CompletionHandler<Object> handler) throws JSONException {
-        final RequestOptions requestOptions = new Gson().fromJson(object.toString(), RequestOptions.class); // 请求json数据
-        final Map<String, Object> responseData = new HashMap<>(); // 响应数据
-
+        RequestOptions requestOptions = new Gson().fromJson(object.toString(), RequestOptions.class); // 请求配置
+        Set<Map.Entry<String, JsonElement>> headerEntrySet = requestOptions.getHeaders().entrySet(); // 请求头set
+        String contentType = "application/json"; // body数据类型
+        Map<String, Object> responseData = new HashMap<>(); // 响应数据
         Request.Builder rb = new Request.Builder();
+
         rb.url(requestOptions.getUrl()); // 设置url
 
-       Set<Map.Entry<String, JsonElement>> headerEntrySet = requestOptions.getHeaders().entrySet();
+        for (Map.Entry<String, JsonElement> entry : headerEntrySet) {
+            String key = entry.getKey();
+            String value = String.valueOf(entry.getValue());
+            if (key.equalsIgnoreCase("content-type")) {
+                contentType = value;
+            }
+            rb.header(key, value); //设置请求头
+        }
+
+        if (requestOptions.getData() != null) {
+            RequestBody requestBody = RequestBody
+                    .create(requestOptions.getData().toString(), MediaType.parse(contentType));
+            if (requestOptions.getMethod().equalsIgnoreCase("post")) {
+                rb.post(requestBody); // 设置请求body
+            } else {
+                rb.put(requestBody); // 设置请求body
+            }
+        }
 
 //        headerEntrySet.
 
