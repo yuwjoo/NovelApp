@@ -11,7 +11,7 @@ public class RequestOptions {
 
     private JsonObject params;
 
-    private JsonObject data;
+    private Object data;
 
     private long timeout;
 
@@ -43,11 +43,11 @@ public class RequestOptions {
         this.timeout = timeout;
     }
 
-    public JsonObject getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(JsonObject data) {
+    public void setData(Object data) {
         this.data = data;
     }
 
