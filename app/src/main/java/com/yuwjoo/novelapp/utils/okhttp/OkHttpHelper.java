@@ -1,6 +1,6 @@
 package com.yuwjoo.novelapp.utils.okhttp;
 
-import com.yuwjoo.novelapp.okhttp.BaseInterceptor;
+import com.yuwjoo.novelapp.utils.okhttp.interceptor.TimeoutInterceptor;
 
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -10,7 +10,7 @@ public class OkHttpHelper {
     private static final OkHttpClient okHttpClient;
 
     static {
-        okHttpClient = new OkHttpClient.Builder().addInterceptor(new BaseInterceptor()).build();
+        okHttpClient = new OkHttpClient.Builder().addInterceptor(new TimeoutInterceptor()).build();
     }
 
     /**
