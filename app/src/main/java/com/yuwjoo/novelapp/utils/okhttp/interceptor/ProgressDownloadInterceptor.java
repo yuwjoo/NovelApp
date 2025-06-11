@@ -17,15 +17,14 @@ public class ProgressDownloadInterceptor implements Interceptor {
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request request = chain.request();
         RequestTagModel tag = (RequestTagModel) request.tag();
+        Response originalResponse = chain.proceed(request);
 
-        try (Response originalResponse = chain.proceed(request)) {
-            if (tag != null && tag.getProgressDownloadListener() != null) {
-                return originalResponse.newBuilder()
-                        .body(new ProgressResponseBody(originalResponse.body(), tag.getProgressDownloadListener())) // 添加下载监听器
-                        .build();
-            } else {
-                return originalResponse;
-            }
+        if (tag != null && tag.getProgressDownloadListener() != null) {
+            return originalResponse.newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body(), tag.getProgressDownloadListener())) // 添加下载监听器
+                    .build();
+        } else {
+            return originalResponse;
         }
     }
 }

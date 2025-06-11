@@ -32,7 +32,7 @@ public class RequestBuilder {
     }
 
     public RequestBuilder setMethod(String method) {
-        this.method = method;
+        this.method = method != null ? method.toUpperCase() : null;
         return this;
     }
 
@@ -120,12 +120,12 @@ public class RequestBuilder {
             }
         }
 
-        String method = this.method == null || this.method.isEmpty() ? "get" : this.method;
-        RequestBody data = this.body != null ? this.body : RequestBody.create("", null);
-        if (this.progressUploadListener != null) {
-            data = new ProgressRequestBody(data, this.progressUploadListener); // 添加上传进度监听器
+        String method = this.method == null || this.method.isEmpty() ? "GET" : this.method;
+        RequestBody body = this.body;
+        if (this.progressUploadListener != null && body != null) {
+            body = new ProgressRequestBody(body, this.progressUploadListener); // 添加上传进度监听器
         }
-        requestBuilder.method(method, data); // 设置方法和请求体
+        requestBuilder.method(method, body); // 设置方法和请求体
 
         RequestTagModel requestTagModel = new RequestTagModel(this.connectTimeout, this.readTimeout, this.writeTimeout, this.progressDownloadListener);
         requestBuilder.tag(requestTagModel); // 附加信息

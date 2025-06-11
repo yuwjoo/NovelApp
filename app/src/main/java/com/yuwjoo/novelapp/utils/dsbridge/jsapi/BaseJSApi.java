@@ -67,28 +67,31 @@ public class BaseJSApi {
         }
 
         Object dataObject = requestOptionsModel.getData();
-        if (dataObject != null) {
-            switch (requestOptionsModel.getDataType()) {
-                case "json": {
-                    RequestBody requestBody = RequestBody.create(dataObject.toString(), MediaType.get("application/json"));
-                    requestBuilder.setBody(requestBody); // 设置body
-                    break;
-                }
-                case "form": {
-                    FormBody.Builder formBodyBuilder = new FormBody.Builder();
-                    JSONObject dataJson = new JSONObject(dataObject.toString());
-                    for (Iterator<String> it = dataJson.keys(); it.hasNext(); ) {
-                        String key = it.next();
-                        String value = dataJson.getO
-                    }
-                    requestBuilder.setBody(requestBody); // 设置body
-                    break;
-                }
-            }
-        }
+        RequestBody requestBody = RequestBody.create(dataObject.toString(), MediaType.get("application/json"));
+        requestBuilder.setBody(requestBody); // 设置body
 
-        int timeout = requestOptionsModel.getTimeout() == 0 ? -1 : requestOptionsModel.getTimeout();
-        requestBuilder.setTimeout(timeout); // 设置超时时间
+//        Object dataObject = requestOptionsModel.getData();
+//        if (dataObject != null) {
+//            switch (requestOptionsModel.getDataType()) {
+//                case "json": {
+//                    RequestBody requestBody = RequestBody.create(dataObject.toString(), MediaType.get("application/json"));
+//                    requestBuilder.setBody(requestBody); // 设置body
+//                    break;
+//                }
+//                case "form": {
+//                    FormBody.Builder formBodyBuilder = new FormBody.Builder();
+//                    JSONObject dataJson = new JSONObject(dataObject.toString());
+//                    for (Iterator<String> it = dataJson.keys(); it.hasNext(); ) {
+//                        String key = it.next();
+//                        String value = dataJson.getO
+//                    }
+//                    requestBuilder.setBody(requestBody); // 设置body
+//                    break;
+//                }
+//            }
+//        }
+
+        requestBuilder.setTimeout(requestOptionsModel.getTimeout() / 1000); // 设置超时时间
 
         if (requestOptionsModel.isEnableUploadProgressListener()) {
             requestBuilder.setProgressUploadListener((bytesRead, contentLength, done) -> {
@@ -124,58 +127,7 @@ public class BaseJSApi {
             }); // 设置下载进度监听器
         }
 
-//        -------------------------
-
-        Request.Builder rb = new Request.Builder();
-
-        HttpUrl.Builder httpUrlBuilder = Objects.requireNonNull(HttpUrl.parse(requestOptionsModel.getUrl())).newBuilder();
-        if (requestOptionsModel.getParams() != null) {
-            Set<Map.Entry<String, JsonElement>> paramsEntrySet = requestOptionsModel.getParams().entrySet(); // 查询参数set
-            for (Map.Entry<String, JsonElement> entry : paramsEntrySet) {
-                String key = entry.getKey();
-                String value = entry.getValue().getAsString();
-                httpUrlBuilder.addQueryParameter(key, value); //设置查询参数
-            }
-        }
-        rb.url(httpUrlBuilder.build()); // 设置url
-
-        if (requestOptionsModel.getHeaders() != null) {
-            Set<Map.Entry<String, JsonElement>> headerEntrySet = requestOptionsModel.getHeaders().entrySet(); // 请求头set
-            for (Map.Entry<String, JsonElement> entry : headerEntrySet) {
-                String key = entry.getKey();
-                String value = entry.getValue().getAsString();
-                if (key.equalsIgnoreCase("content-type")) {
-                    contentType = value;
-                }
-                rb.header(key, value); //设置请求头
-            }
-        }
-
-        switch (requestOptionsModel.getMethod().toLowerCase()) {
-            case "get":
-                rb.get();
-                break;
-            case "post": {
-                String bodyData = requestOptionsModel.getData() != null ? requestOptionsModel.getData().toString() : "";
-                MediaType mediaType = contentType != null ? MediaType.get(contentType) : null;
-                rb.post(RequestBody.create(bodyData, mediaType));
-                break;
-            }
-            case "put": {
-                String bodyData = requestOptionsModel.getData() != null ? requestOptionsModel.getData().toString() : "";
-                MediaType mediaType = contentType != null ? MediaType.get(contentType) : null;
-                rb.put(RequestBody.create(bodyData, mediaType));
-                break;
-            }
-            case "delete": {
-                String bodyData = requestOptionsModel.getData() != null ? requestOptionsModel.getData().toString() : "";
-                MediaType mediaType = contentType != null ? MediaType.get(contentType) : null;
-                rb.delete(RequestBody.create(bodyData, mediaType));
-                break;
-            }
-        }
-
-        Call call = OkHttpUtils.getOkHttpClient().newCall(rb.build());
+        Call call = requestBuilder.call();
 
         call.enqueue(new Callback() {
             @Override
@@ -207,7 +159,7 @@ public class BaseJSApi {
                     result.put("type", "response");
                     JSONObject headers = new JSONObject();
                     while (iteratorHeaders.hasNext()) {
-                        Pair<String, String> pair =  iteratorHeaders.next();
+                        Pair<String, String> pair = iteratorHeaders.next();
                         headers.put(pair.getFirst(), pair.getSecond());
                     }
                     JSONObject data = new JSONObject();
