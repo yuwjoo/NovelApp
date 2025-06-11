@@ -19,13 +19,13 @@ public class TimeoutInterceptor implements Interceptor {
         RequestTagModel tag = (RequestTagModel) request.tag();
 
         if (tag != null) {
-            if (tag.getConnectTimeout() != -1) {
+            if (tag.getConnectTimeout() > -1) {
                 chain = chain.withConnectTimeout(tag.getConnectTimeout(), TimeUnit.SECONDS);
             }
-            if (tag.getReadTimeout() != -1) {
+            if (tag.getReadTimeout() > -1) {
                 chain = chain.withReadTimeout(tag.getReadTimeout(), TimeUnit.SECONDS);
             }
-            if (tag.getWriteTimeout() != -1) {
+            if (tag.getWriteTimeout() > -1) {
                 chain = chain.withWriteTimeout(tag.getWriteTimeout(), TimeUnit.SECONDS);
             }
         }
