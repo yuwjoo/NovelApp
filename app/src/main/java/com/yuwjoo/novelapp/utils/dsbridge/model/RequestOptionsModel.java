@@ -1,66 +1,23 @@
 package com.yuwjoo.novelapp.utils.dsbridge.model;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class RequestOptionsModel {
     private String url; // 请求url
     private String method; // 请求方法
     private JsonObject headers; // 请求头
-    private JsonObject params; // 查询参数
-    private Object data; // body数据
-    private String dataType; // body数据类型
     private int timeout; // 超时时间
-    private String responseType; // 响应数据类型
-    private boolean cancelable; // 该请求是否需要取消
-    private boolean enableUploadProgressListener; // 启用上传进度监听器
-    private boolean enableDownloadProgressListener; // 启用下载进度监听器
+    private String bodyText; // body文本
+    private String bodyBlobText; // body二进制文本
+    private JsonArray bodyMultipartList; // body分块数据列表
 
-    public boolean isCancelable() {
-        return cancelable;
+    public String getUrl() {
+        return url;
     }
 
-    public void setCancelable(boolean cancelable) {
-        this.cancelable = cancelable;
-    }
-
-    public String getResponseType() {
-        return responseType;
-    }
-
-    public void setResponseType(String responseType) {
-        this.responseType = responseType;
-    }
-
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    public JsonObject getParams() {
-        return params;
-    }
-
-    public void setParams(JsonObject params) {
-        this.params = params;
-    }
-
-    public JsonObject getHeaders() {
-        return headers;
-    }
-
-    public void setHeaders(JsonObject headers) {
-        this.headers = headers;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getMethod() {
@@ -71,35 +28,43 @@ public class RequestOptionsModel {
         this.method = method;
     }
 
-    public String getUrl() {
-        return url;
+    public JsonObject getHeaders() {
+        return headers;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setHeaders(JsonObject headers) {
+        this.headers = headers;
     }
 
-    public String getDataType() {
-        return dataType;
+    public int getTimeout() {
+        return timeout;
     }
 
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 
-    public boolean isEnableUploadProgressListener() {
-        return enableUploadProgressListener;
+    public String getBodyText() {
+        return bodyText;
     }
 
-    public void setEnableUploadProgressListener(boolean enableUploadProgressListener) {
-        this.enableUploadProgressListener = enableUploadProgressListener;
+    public void setBodyText(String bodyText) {
+        this.bodyText = bodyText;
     }
 
-    public boolean isEnableDownloadProgressListener() {
-        return enableDownloadProgressListener;
+    public String getBodyBlobText() {
+        return bodyBlobText;
     }
 
-    public void setEnableDownloadProgressListener(boolean enableDownloadProgressListener) {
-        this.enableDownloadProgressListener = enableDownloadProgressListener;
+    public void setBodyBlobText(String bodyBlobText) {
+        this.bodyBlobText = bodyBlobText;
+    }
+
+    public JsonArray getBodyMultipartList() {
+        return bodyMultipartList;
+    }
+
+    public void setBodyMultipartList(JsonArray bodyMultipartList) {
+        this.bodyMultipartList = bodyMultipartList;
     }
 }

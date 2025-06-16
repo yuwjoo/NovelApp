@@ -25,7 +25,7 @@ public class WebViewPresenter implements IWebViewPresenter {
         webView.addJavascriptObject(new JSApi(), null);
         webView.addJavascriptObject(new BaseJSApi(), null);
 //        webView.loadUrl("file:///android_asset/web/index.html");
-        webView.loadUrl("http://192.168.0.108:9000");
+        webView.loadUrl("http://192.168.0.106:9000");
 //        webView.loadUrl("http://localhost:5000"); // adb reverse tcp:5000 tcp:9000
     }
 }
