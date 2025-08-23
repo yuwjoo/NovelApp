@@ -19,6 +19,7 @@ class MainActivity : ComponentActivity() {
             MyHomeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MyWebView(
+                        mainActivity = this,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
